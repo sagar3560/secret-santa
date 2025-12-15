@@ -1,30 +1,51 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Secret Santa</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 22px; line-height: 1.35; }
+      .btn {
+        display: inline-block; padding: 12px 16px; border: 1px solid #222;
+        border-radius: 10px; text-decoration: none; color: #111; font-weight: 600;
+      }
+      .muted { color: #666; margin-top: 10px; font-size: 13px; }
+    </style>
+  </head>
+
+  <body>
+    <h2>Secret Santa</h2>
+    <div id="msg">Redirecting…</div>
+    <div id="fallback" style="margin-top:14px;"></div>
 
     <script>
-      // 1) Read token from ?t=
       const params = new URLSearchParams(window.location.search);
       const t = params.get("t");
 
-      // 2) Your Apps Script Web App base URL (must end with /exec)
-      const WEB_APP = "https://script.google.com/macros/s/AKfycbwAdHsBkMIbz06oLo_fu3Ab-9MGpBv4JQhJqNfCp7KfsQwOBZWa3hzpeNRQ7Z7V1b9JWw/exec";
+      // Your Apps Script Web App base URL (must end with /exec)
+      const WEB_APP = "https://script.google.com/macros/s/AKfycbxmZDB4E1xZ3vrkz1TwOc8-EaKc64MWE02kUG3eQb5LSxo-DtpNG4ezIAF8wqrqIZmeow/exec";
 
-      // 3) Redirect
       if (!t) {
-        document.addEventListener("DOMContentLoaded", () => {
-          document.body.innerHTML =
-            "<p>Missing token. Please open the exact link you received.</p>";
-        });
+        document.getElementById("msg").innerText =
+          "Missing token. Please open the exact link you received.";
       } else {
-        window.location.replace(`${WEB_APP}?t=${encodeURIComponent(t)}`);
+        const target = `${WEB_APP}?t=${encodeURIComponent(t)}`;
+
+        // Key change: redirect via Google URL redirector (often avoids Drive hijack)
+        const googleRedirect = `https://www.google.com/url?q=${encodeURIComponent(target)}`;
+
+        // Try redirect
+        window.location.replace(googleRedirect);
+
+        // Fallback button
+        document.getElementById("fallback").innerHTML = `
+          <a class="btn" href="${googleRedirect}" target="_blank" rel="noopener">Tap here if not redirected</a>
+          <div class="muted">
+            If you still see a Google Drive error, choose “Open in browser” (Safari/Chrome).
+          </div>
+        `;
       }
     </script>
-  </head>
-  <body>
-    Redirecting…
   </body>
 </html>
