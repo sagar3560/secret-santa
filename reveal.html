@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Secret Santa</title>
+
+    <script>
+      // 1) Read token from ?t=
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get("t");
+
+      // 2) Your Apps Script Web App base URL (must end with /exec)
+      const WEB_APP = "PASTE_YOUR_WEB_APP_URL_HERE";
+
+      // 3) Redirect
+      if (!t) {
+        document.addEventListener("DOMContentLoaded", () => {
+          document.body.innerHTML =
+            "<p>Missing token. Please open the exact link you received.</p>";
+        });
+      } else {
+        window.location.replace(`${WEB_APP}?t=${encodeURIComponent(t)}`);
+      }
+    </script>
+  </head>
+  <body>
+    Redirecting…
+  </body>
+</html>
