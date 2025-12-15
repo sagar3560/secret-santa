@@ -11,6 +11,7 @@
         border-radius: 10px; text-decoration: none; color: #111; font-weight: 600;
       }
       .muted { color: #666; margin-top: 10px; font-size: 13px; }
+      code { background: #f4f4f4; padding: 2px 6px; border-radius: 6px; }
     </style>
   </head>
 
@@ -23,8 +24,9 @@
       const params = new URLSearchParams(window.location.search);
       const t = params.get("t");
 
-      // Your Apps Script Web App base URL (must end with /exec)
-      const WEB_APP = "https://script.google.com/macros/s/AKfycbxmZDB4E1xZ3vrkz1TwOc8-EaKc64MWE02kUG3eQb5LSxo-DtpNG4ezIAF8wqrqIZmeow/exec";
+      // Your Apps Script Web App URL (must end with /exec)
+      const WEB_APP =
+        "https://script.google.com/macros/s/AKfycbxmZDB4E1xZ3vrkz1TwOc8-EaKc64MWE02kUG3eQb5LSxo-DtpNG4ezIAF8wqrqIZmeow/exec";
 
       if (!t) {
         document.getElementById("msg").innerText =
@@ -32,17 +34,14 @@
       } else {
         const target = `${WEB_APP}?t=${encodeURIComponent(t)}`;
 
-        // Key change: redirect via Google URL redirector (often avoids Drive hijack)
-        const googleRedirect = `https://www.google.com/url?q=${encodeURIComponent(target)}`;
+        // Redirect immediately
+        window.location.replace(target);
 
-        // Try redirect
-        window.location.replace(googleRedirect);
-
-        // Fallback button
+        // Fallback button (helps in restrictive in-app browsers)
         document.getElementById("fallback").innerHTML = `
-          <a class="btn" href="${googleRedirect}" target="_blank" rel="noopener">Tap here if not redirected</a>
+          <a class="btn" href="${target}" target="_blank" rel="noopener">Tap here if not redirected</a>
           <div class="muted">
-            If you still see a Google Drive error, choose “Open in browser” (Safari/Chrome).
+            If you see a Google Drive error, open this link in Safari/Chrome (not inside Drive/Gmail).
           </div>
         `;
       }
